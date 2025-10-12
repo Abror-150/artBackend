@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { UploadController } from './upload/upload.controller';
 import { OrderModule } from './order/order.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ArtworkModule } from './artwork/artwork.module';
 
 @Module({
-  imports: [OrderModule, PrismaModule],
+  imports: [OrderModule, PrismaModule, ArtworkModule],
   controllers: [AppController, UploadController],
   providers: [AppService],
 })
