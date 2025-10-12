@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,44 +7,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Order {
-  id     String  @id @default(uuid())
-  name   String
-  phone  String
-  email  String
-  oferta Boolean @default(false)
-
-  art Art[]
+model Artwork {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  price       Float
+  imageUrl    String
+  category    String?
+  comments    Comment[]
+  createdAt   DateTime  @default(now())
 }
 
-model Art {
+model Comment {
   id        String   @id @default(uuid())
-  img       String
   name      String
-  price     Int
-  about     String
-  isActive  Boolean  @default(false)
+  email     String?
+  message   String
+  rating    Int      @default(5)
+  artwork   Artwork  @relation(fields: [artworkId], references: [id])
+  artworkId String
   createdAt DateTime @default(now())
-  count     Int
-  orderId   String
-  order     Order    @relation(fields: [orderId], references: [id])
-  Basket    Basket[]
 }
 
-model Basket {
-  id    String @id @default(uuid())
-  artId String
-  art   Art    @relation(fields: [artId], references: [id])
-  total Int
+model Order {
+  id            String   @id @default(uuid())
+  fullName      String
+  phoneNumber   String
+  totalPrice    Float
+  status        String   @default("pending")
+  offerAccepted Boolean  @default(false) // ✅ ommaviy oferta roziligi
+  createdAt     DateTime @default(now())
 }
 
 model Contact {
-  id String @id @default(uuid())
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}
 
-  name  String
-  phone String
-  email String?
-  mavzu String
-
-  message String
+model Faq {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  createdAt DateTime @default(now())
 }
