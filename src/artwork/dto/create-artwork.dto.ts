@@ -29,7 +29,6 @@ export class CreateArtworkDto {
     example: 'https://example.com/images/artwork1.jpg',
     description: 'Asarning rasmi joylashgan URL manzili',
   })
-  @IsUrl()
   imageUrl: string;
 
   @ApiProperty({

@@ -39,7 +39,6 @@ export class ArtworkService {
 
       const where: any = {};
 
-      // 🔍 Agar qidiruv bo‘lsa — title yoki description bo‘yicha filter
       if (search) {
         where.OR = [
           { title: { contains: search, mode: 'insensitive' } },
@@ -47,12 +46,10 @@ export class ArtworkService {
         ];
       }
 
-      // 🏷️ Agar kategoriya bo‘lsa — filter bo‘yicha
       if (category) {
         where.category = { equals: category, mode: 'insensitive' };
       }
 
-      // Ma’lumotlarni olish
       const [artworks, total] = await Promise.all([
         this.prisma.artwork.findMany({
           where,

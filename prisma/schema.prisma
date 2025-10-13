@@ -35,7 +35,7 @@ model Order {
   phoneNumber   String
   totalPrice    Float
   status        String   @default("pending")
-  offerAccepted Boolean  @default(false) // ✅ ommaviy oferta roziligi
+  offerAccepted Boolean  @default(false)
   createdAt     DateTime @default(now())
 }
 
