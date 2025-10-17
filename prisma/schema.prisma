@@ -8,14 +8,15 @@ datasource db {
 }
 
 model Artwork {
-  id          String    @id @default(uuid())
+  id          String      @id @default(uuid())
   title       String
   description String?
   price       Float
   imageUrl    String
   category    String?
   comments    Comment[]
-  createdAt   DateTime  @default(now())
+  createdAt   DateTime    @default(now())
+  orderItem   orderItem[]
 }
 
 model Comment {
@@ -30,13 +31,25 @@ model Comment {
 }
 
 model Order {
-  id            String   @id @default(uuid())
+  id            String      @id @default(uuid())
   fullName      String
   phoneNumber   String
+  address       String?
   totalPrice    Float
-  status        String   @default("pending")
-  offerAccepted Boolean  @default(false)
-  createdAt     DateTime @default(now())
+  status        String      @default("pending")
+  offerAccepted Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  orderItem     orderItem[]
+}
+
+model orderItem {
+  id        String @id @default(uuid())
+  orderId   String
+  artworkId String
+  quantity  Int    @default(1)
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  artWork Artwork @relation(fields: [artworkId], references: [id])
 }
 
 model Contact {

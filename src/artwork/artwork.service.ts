@@ -53,7 +53,6 @@ export class ArtworkService {
       const [artworks, total] = await Promise.all([
         this.prisma.artwork.findMany({
           where,
-          include: { comments: true },
           skip,
           take: limit,
           orderBy: { createdAt: 'desc' },
