@@ -42,6 +42,8 @@ model Order {
   orderItem     orderItem[]
 }
 
+
+
 model orderItem {
   id        String @id @default(uuid())
   orderId   String

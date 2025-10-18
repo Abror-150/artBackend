@@ -59,7 +59,7 @@ export class OrderService {
     const productList = artworks.map((a) => `🖼 ${a.title}`).join('\n');
 
     const message = `
-    🆕 *Yangi buyurtma keldi!*
+    🆕 *Yangi buyurtma keldi!
     ━━━━━━━━━━━━━━
     👤 Ism: ${data.fullName}
     📞 Telefon: ${data.phoneNumber}

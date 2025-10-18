@@ -14,6 +14,11 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
 
+  app.enableCors({
+    origin: 'http://localhost:8080',
+    credentials: true,
+  });
+
   app.use('/images', express.static(path.join(process.cwd(), 'images')));
   SwaggerModule.setup('api', app, documentFactory);
   await app.listen(process.env.PORT ?? 3000);
