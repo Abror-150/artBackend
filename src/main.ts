@@ -14,8 +14,9 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
 
-  app.enableCors({
-    origin: 'http://localhost:8080',
+ app.enableCors({
+    origin: '*', // yoki frontend domeni
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
 
@@ -24,3 +25,4 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
+
