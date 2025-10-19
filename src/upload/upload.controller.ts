@@ -50,8 +50,8 @@ export class UploadController {
       .toFile(compressedPath);
 
     return {
-      original: `http://localhost:3000/images/${file.filename}`,
-      compressed: `http://localhost:3000/images/compressed-${file.filename}`,
+      original: `https://doc.saparboy.uz/${file.filename}`,
+      compressed: `https://doc.saparboy.uz/images/compressed-${file.filename}`,
     };
   }
 }
