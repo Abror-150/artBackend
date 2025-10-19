@@ -27,29 +27,33 @@ export class ArtworkService {
   }
 
   async findAll(query: {
-    page?: number;
-    limit?: number;
+    page?: number | string;
+    limit?: number | string;
     search?: string;
     category?: string;
   }) {
     try {
-      const { page = 1, limit = 10, search, category } = query;
-
+      // --- Parametrlarni tozalaymiz
+      const page = Number(query.page) > 0 ? Number(query.page) : 1;
+      const limit = Number(query.limit) > 0 ? Number(query.limit) : 10;
       const skip = (page - 1) * limit;
 
       const where: any = {};
 
-      if (search) {
+      // --- Qidiruv (search)
+      if (query.search) {
         where.OR = [
-          { title: { contains: search, mode: 'insensitive' } },
-          { description: { contains: search, mode: 'insensitive' } },
+          { title: { contains: query.search, mode: 'insensitive' } },
+          { description: { contains: query.search, mode: 'insensitive' } },
         ];
       }
 
-      if (category) {
-        where.category = { equals: category, mode: 'insensitive' };
+      // --- Kategoriya bo‘yicha filtr
+      if (query.category) {
+        where.category = { equals: query.category, mode: 'insensitive' };
       }
 
+      // --- Ma'lumotlarni olish
       const [artworks, total] = await Promise.all([
         this.prisma.artwork.findMany({
           where,
@@ -60,6 +64,7 @@ export class ArtworkService {
         this.prisma.artwork.count({ where }),
       ]);
 
+      // --- Natijani qaytarish
       return {
         success: true,
         page,
@@ -69,7 +74,14 @@ export class ArtworkService {
         data: artworks,
       };
     } catch (error) {
-      throw new InternalServerErrorException('Failed to fetch artworks');
+      console.error('❌ Artwork fetch error:', error);
+
+      // Agar bu Prisma xatosi bo‘lsa, foydalanuvchiga tushunarli javob beramiz
+      return {
+        success: false,
+        message: error.message || 'Failed to fetch artworks',
+        data: [],
+      };
     }
   }
 
