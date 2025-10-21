@@ -29,7 +29,7 @@ model Comment {
   email     String?
   message   String
   rating    Int      @default(5)
-  artwork   Artwork  @relation(fields: [artworkId], references: [id])
+  artwork   Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
   artworkId String
   createdAt DateTime @default(now())
 }
@@ -53,8 +53,8 @@ model orderItem {
   artworkId String
   quantity  Int    @default(1)
 
-  order   Order   @relation(fields: [orderId], references: [id])
-  artWork Artwork @relation(fields: [artworkId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  artWork Artwork @relation(fields: [artworkId], references: [id], onDelete: Cascade)
 }
 
 model Contact {
