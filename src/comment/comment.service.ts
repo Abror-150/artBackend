@@ -23,7 +23,19 @@ export class CommentService {
   }
 
   async findAll() {
-    let data = await this.prisma.comment.findMany();
+    let data = await this.prisma.comment.findMany({
+      include: {
+        artwork: {
+          include: {
+            orderItem: {
+              include: {
+                order: true,
+              },
+            },
+          },
+        },
+      },
+    });
     return data;
   }
 

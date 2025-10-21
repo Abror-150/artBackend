@@ -66,7 +66,6 @@ export class ArtworkService {
           skip,
           take: limit,
           orderBy: { createdAt: 'desc' },
-          include: { orderItem: { select: { artWork: true } } },
         }),
         this.prisma.artwork.count({ where }),
       ]);
