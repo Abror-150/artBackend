@@ -22,7 +22,10 @@ export class ArtworkService {
         data: artwork,
       };
     } catch (error) {
-      throw new InternalServerErrorException('Failed to create artwork', error.message);
+      throw new InternalServerErrorException(
+        'Failed to create artwork',
+        error.message,
+      );
     }
   }
 
@@ -63,6 +66,7 @@ export class ArtworkService {
           skip,
           take: limit,
           orderBy: { createdAt: 'desc' },
+          include: { orderItem: { select: { artWork: true } } },
         }),
         this.prisma.artwork.count({ where }),
       ]);
@@ -129,7 +133,7 @@ export class ArtworkService {
 
   async remove(id: string) {
     try {
-      const existing = await this.prisma.artwork.findUnique({ where: { id } });
+      const existing = await this.prisma.artwork.findFirst({ where: { id } });
       if (!existing) {
         throw new NotFoundException(`Artwork with ID ${id} not found`);
       }
@@ -141,7 +145,10 @@ export class ArtworkService {
       };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to delete artwork');
+      throw new InternalServerErrorException(
+        'Failed to delete artwork',
+        error.message,
+      );
     }
   }
 }
