@@ -41,6 +41,14 @@ export class CreateOrderDto {
   address?: string;
 
   @ApiProperty({
+    example: 'example@gmail.com',
+    description: 'Sizning emailingiz',
+  })
+  @IsOptional()
+  @IsString()
+  email?: string;
+
+  @ApiProperty({
     type: [OrderItemDto],
     description: 'Buyurtmadagi rasm(lar) ro‘yxati',
     example: [{ artworkId: 'a1b2c3', quantity: 1 }],

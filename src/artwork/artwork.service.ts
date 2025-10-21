@@ -22,7 +22,7 @@ export class ArtworkService {
         data: artwork,
       };
     } catch (error) {
-      throw new InternalServerErrorException('Failed to create artwork');
+      throw new InternalServerErrorException('Failed to create artwork', error.message);
     }
   }
 
@@ -33,18 +33,21 @@ export class ArtworkService {
     category?: string;
   }) {
     try {
-      // --- Parametrlarni tozalaymiz
       const page = Number(query.page) > 0 ? Number(query.page) : 1;
       const limit = Number(query.limit) > 0 ? Number(query.limit) : 10;
       const skip = (page - 1) * limit;
 
       const where: any = {};
 
-      // --- Qidiruv (search)
+      // --- 🔍 Qidiruv 3 tilda
       if (query.search) {
         where.OR = [
-          { title: { contains: query.search, mode: 'insensitive' } },
-          { description: { contains: query.search, mode: 'insensitive' } },
+          { title_uz: { contains: query.search, mode: 'insensitive' } },
+          { title_ru: { contains: query.search, mode: 'insensitive' } },
+          { title_en: { contains: query.search, mode: 'insensitive' } },
+          { description_uz: { contains: query.search, mode: 'insensitive' } },
+          { description_ru: { contains: query.search, mode: 'insensitive' } },
+          { description_en: { contains: query.search, mode: 'insensitive' } },
         ];
       }
 
@@ -53,7 +56,7 @@ export class ArtworkService {
         where.category = { equals: query.category, mode: 'insensitive' };
       }
 
-      // --- Ma'lumotlarni olish
+      // --- Ma’lumotlarni olish
       const [artworks, total] = await Promise.all([
         this.prisma.artwork.findMany({
           where,
@@ -64,7 +67,6 @@ export class ArtworkService {
         this.prisma.artwork.count({ where }),
       ]);
 
-      // --- Natijani qaytarish
       return {
         success: true,
         page,
@@ -75,8 +77,6 @@ export class ArtworkService {
       };
     } catch (error) {
       console.error('❌ Artwork fetch error:', error);
-
-      // Agar bu Prisma xatosi bo‘lsa, foydalanuvchiga tushunarli javob beramiz
       return {
         success: false,
         message: error.message || 'Failed to fetch artworks',

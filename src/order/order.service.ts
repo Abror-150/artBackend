@@ -16,7 +16,13 @@ export class OrderService {
       where: {
         id: { in: data.items.map((i) => i.artworkId) },
       },
-      select: { id: true, price: true, title: true },
+      select: {
+        id: true,
+        price: true,
+        title_uz: true,
+        title_ru: true,
+        title_en: true,
+      },
     });
 
     let totalPrice = 0;
@@ -39,6 +45,7 @@ export class OrderService {
         fullName: data.fullName,
         phoneNumber: data.phoneNumber,
         address: data.address,
+        email: data.email,
         totalPrice,
 
         orderItem: {
@@ -48,21 +55,17 @@ export class OrderService {
           })),
         },
       },
-      include: {
-        orderItem: {
-          include: { artWork: true },
-        },
-      },
     });
     const BOT_TOKEN = '8202198108:AAHVOgeiLCJ2Y_SDUG-y_dB-kn8MVcEHJmA';
     const CHAT_ID = '-4967890265';
-    const productList = artworks.map((a) => `🖼 ${a.title}`).join('\n');
+    const productList = artworks.map((a) => `🖼 ${a.title_uz}`).join('\n');
 
     const message = `
     🆕 *Yangi buyurtma keldi!
     ━━━━━━━━━━━━━━
     👤 Ism: ${data.fullName}
     📞 Telefon: ${data.phoneNumber}
+    📧 Email: ${data.email || 'kiritilmagan'}
     📦 Mahsulot: ${productList}
     💰 Narxi: ${totalPrice} so'm
     📍 Manzil: ${data.address}
@@ -74,7 +77,7 @@ export class OrderService {
       await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         chat_id: CHAT_ID,
         text: message,
-        parse_mode: 'Markdown',
+        // parse_mode: 'Markdown',
       });
     } catch (err) {
       console.error('Telegramga xabar yuborishda xatolik:', err.message);
